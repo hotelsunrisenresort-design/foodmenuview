@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#FAF9F6">
+<title>ELIXIR Menu — Sunrise N Resort</title>
+<meta name="description" content="View the ELIXIR Multi-Cuisine food and beverage menu.">
+
+<!-- Google Fonts for Elegant Typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* =============================================
+     DESIGN TOKENS & VARIABLES
+     ============================================= */
+  :root {
+    --bg-main:        #FAF9F6; /* Warm off-white */
+    --bg-card:        #FFFFFF;
+    --text-primary:   #1A1A1A; /* Deep charcoal */
+    --text-secondary: #5C5C5C;
+    --gold-primary:   #C8A951;
+    --gold-light:     #E8D499;
+    --border-color:   #EAE5D9;
+    --shadow-sm:      0 2px 8px rgba(0,0,0,0.04);
+    --shadow-md:      0 8px 24px rgba(0,0,0,0.06);
+    
+    --veg-color:      #16A34A;
+    --nonveg-color:   #DC2626;
+
+    --font-heading:   'Playfair Display', serif;
+    --font-body:      'Inter', sans-serif;
+    
+    --transition:     all 0.3s ease;
+  }
+
+  /* =============================================
+     RESET & BASE STYLES
+     ============================================= */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; outline: none; }
+  
+  /* =============================================
+     HEADER & HERO SECTION
+     ============================================= */
+  .hero {
+    text-align: center;
+    padding: 60px 20px 40px;
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+  }
+  .hero-logo {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 16px;
+    background: var(--text-primary);
+    color: var(--gold-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: var(--shadow-md);
+  }
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .hero-subtitle {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold-primary);
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .guide-box {
+    display: inline-block;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .guide-box strong {
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* =============================================
+     STICKY NAVIGATION (SEARCH & FILTERS)
+     ============================================= */
+  .nav-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250, 249, 246, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+  .search-container {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto 16px;
+  }
+  .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: var(--text-secondary);
+  }
+  .search-input {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    transition: var(--transition);
+  }
+  .search-input:focus {
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 0 3px rgba(200, 169, 81, 0.1);
+  }
+  
+  .filter-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .filter-scroll::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    flex-shrink: 0;
+    padding: 8px 20px;
+    border-radius: 30px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    transition: var(--transition);
+  }
+  .filter-btn.active {
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+    color: var(--bg-main);
+  }
+
+  /* =============================================
+     MENU CONTENT AREA
+     ============================================= */
+  .menu-container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+  }
+
+  /* Category Sections */
+  .menu-section {
+    margin-bottom: 32px;
+  }
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .section-title span {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gold-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Item Cards */
+  .item-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+  }
+  .item-card:active {
+    background: var(--bg-main);
+    border-color: var(--gold-primary);
+  }
+  .item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .item-title-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  /* Diet Indicators (Veg/Non-Veg) */
+  .diet-icon {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .diet-icon::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .diet-icon.veg { border-color: var(--veg-color); }
+  .diet-icon.veg::after { background-color: var(--veg-color); }
+  .diet-icon.nonveg { border-color: var(--nonveg-color); }
+  .diet-icon.nonveg::after { background-color: var(--nonveg-color); }
+
+  .item-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .item-price {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+  .item-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding-left: 24px; /* Align with text, bypassing icon */
+  }
+
+  /* Multi-price layout (e.g. Half/Full, Plain/Masala) */
+  .multi-price-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-left: 24px;
+    margin-top: 8px;
+  }
+  .price-pill {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .price-pill-label { color: var(--text-secondary); }
+  .price-pill-amt { font-weight: 600; color: var(--text-primary); }
+
+  /* =============================================
+     FOOTER
+     ============================================= */
+  .footer {
+    text-align: center;
+    padding: 40px 20px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+  }
+  .footer-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .footer-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  /* Highlight for search */
+  .hl { background: var(--gold-light); color: var(--text-primary); border-radius: 2px; padding: 0 2px; }
+
+</style>
+</head>
+
+<body>
+
+<!-- ===== HERO HEADER ===== -->
+<header class="hero">
+  <div class="hero-logo">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+      <path d="M7 2v20"></path>
+      <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+    </svg>
+  </div>
+  <h1 class="hero-title">ELIXIR</h1>
+  <p class="hero-subtitle">Multi-Cuisine Dining</p>
+  
+  <div class="guide-box">
+    <strong>Welcome</strong>
+    Please browse our offerings and place your order directly with your server.
+  </div>
+</header>
+
+<!-- ===== STICKY NAVIGATION ===== -->
+<div class="nav-wrapper">
+  <div class="search-container">
+    <span class="search-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </span>
+    <input type="text" id="searchInput" class="search-input" placeholder="Search dishes, ingredients...">
+  </div>
+  
+  <div class="filter-scroll" id="categoryFilters">
+    <button class="filter-btn active" data-cat="all">All Menu</button>
+    <button class="filter-btn" data-cat="breakfast">Breakfast</button>
+    <button class="filter-btn" data-cat="beverages">Beverages</button>
+    <button class="filter-btn" data-cat="soups_salads">Soups & Salads</button>
+    <button class="filter-btn" data-cat="snacks">Snacks & Pasta</button>
+    <button class="filter-btn" data-cat="starters">Starters</button>
+    <button class="filter-btn" data-cat="indian">Indian Main</button>
+    <button class="filter-btn" data-cat="chinese">Chinese Main</button>
+    <button class="filter-btn" data-cat="rice">Rice & Noodles</button>
+    <button class="filter-btn" data-cat="breads">Dal & Breads</button>
+    <button class="filter-btn" data-cat="desserts">Desserts</button>
+  </div>
+</div>
+
+<!-- ===== MENU CONTENT ===== -->
+<main class="menu-container">
+  <p class="no-results" id="noResults">No dishes found matching your search.</p>
+  <div id="menuContainer"></div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <h2 class="footer-title">Sunrise N Resort</h2>
+  <p class="footer-text">
+    All prices are exclusive of applicable government taxes.<br>
+    Please inform your server in advance of any food allergies or dietary requirements.<br>
+    Please allow 20-30 minutes for food preparation.
+  </p>
+</footer>
+
+<script>
+  // ==========================================
+  // MENU DATA STRUCTURE
+  // ==========================================
+  const menuData = [
+    {
+      id: "breakfast",
+      title: "Breakfast",
+      timing: "7 AM - 10 AM",
+      items: [
+        { name: "Choice Of Cereal", desc: "With Hot / Cold Milk", price: "150", veg: true },
+        { name: "Bread Toast", desc: "4 Slices With Butter & Jam", price: "120", veg: true },
+        { name: "Eggs To Order", desc: "2 Eggs Served With 2 Slice Bread & Mashed Potato", price: "150", veg: false },
+        { name: "Pancakes", desc: "With Maple Syrup", price: "150", veg: true },
+        { name: "Upma", desc: "Classic South Indian style", price: "150", veg: true },
+        { name: "Dosa", multiPrice: [{label: "Plain", price: "125"}, {label: "Masala", price: "150"}], veg: true },
+        { name: "Uttapam", multiPrice: [{label: "Plain", price: "150"}, {label: "Masala", price: "175"}], veg: true },
+        { name: "Steamed Idli", desc: "3 Idlis With Chutney & Sambhar", price: "125", veg: true },
+        { name: "Poha", desc: "With Tarri", price: "125", veg: true },
+        { name: "Choice Of Paratha", desc: "2 Aloo / Mix Veg / Paneer Parathas", price: "200", veg: true },
+        { name: "Poori Bhaji", desc: "4 Puris", price: "150", veg: true }
+      ]
+    },
+    {
+      id: "beverages",
+      title: "Beverages",
+      timing: "7 AM - 11 PM",
+      items: [
+        { name: "Packaged Drinking Water", desc: "1 Ltr", price: "50", veg: true },
+        { name: "Tea / Coffee", desc: "Hot Beverage", price: "60", veg: true },
+        { name: "Hot Milk / Bournvita / Hot Chocolate", multiPrice: [{label: "Milk", price: "80"}, {label: "Bournvita", price: "100"}, {label: "Hot Choc", price: "120"}], veg: true },
+        { name: "Buttermilk", desc: "Fresh Chilled", price: "70", veg: true },
+        { name: "Lassi", desc: "Plain / Mango / Strawberry", price: "100", veg: true },
+        { name: "Fresh Lime Water / Soda", multiPrice: [{label: "Water", price: "80"}, {label: "Soda", price: "100"}], veg: true },
+        { name: "Canned Juice", desc: "Assorted Flavors", price: "150", veg: true },
+        { name: "Cold Coffee", multiPrice: [{label: "W/O Ice Cream", price: "150"}, {label: "With Ice Cream", price: "180"}], veg: true },
+        { name: "Choice Of Shakes", desc: "Chocolate / Strawberry / Butter Scotch / Oreo", price: "200", veg: true },
+        { name: "Energy Drink", desc: "Chilled Can", price: "200", veg: true },
+        { name: "Soft Beverage", desc: "750 ml Pet Bottle", price: "120", veg: true }
+      ]
+    },
+    {
+      id: "soups_salads",
+      title: "Soups & Salads",
+      timing: "11 AM - 11 PM",
+      items: [
+        { name: "Veg. Caeser Salad", price: "300", veg: true },
+        { name: "Waldorf Salad", price: "300", veg: true },
+        { name: "Paneer Tikka Salad", price: "300", veg: true },
+        { name: "Chicken Caeser Salad", price: "350", veg: false },
+        { name: "Chicken Tikka Salad", price: "350", veg: false },
+        { name: "Tomato Dhaniya Shorba", price: "150", veg: true },
+        { name: "Dal Shorba", price: "175", veg: true },
+        { name: "Cream Of Tomato / Mushroom", price: "175", veg: true },
+        { name: "Veg. Sweet Corn / Manchow / Hot & Sour Soup", price: "175", veg: true },
+        { name: "Chicken Shorba", price: "200", veg: false },
+        { name: "Cream Of Chicken Soup", price: "225", veg: false },
+        { name: "Chicken Sweet Corn / Manchow / Hot & Sour Soup", price: "225", veg: false }
+      ]
+    },
+    {
+      id: "snacks",
+      title: "Snacks & Pasta",
+      timing: "11 AM - 11 PM",
+      items: [
+        { name: "Veg. Sandwich", multiPrice: [{label: "Plain", price: "150"}, {label: "Grilled", price: "200"}], veg: true },
+        { name: "Veg. Club Sandwich", price: "250", veg: true },
+        { name: "Veg. Burger", price: "250", veg: true },
+        { name: "French Fries", multiPrice: [{label: "Classic", price: "125"}, {label: "Peri Peri", price: "150"}], veg: true },
+        { name: "Veg Pizza ~ Homemade", price: "250", veg: true },
+        { name: "Chili Cheese Toast", price: "225", veg: true },
+        { name: "Veg. Pakoda", price: "150", veg: true },
+        { name: "Paneer Pakoda", price: "250", veg: true },
+        { name: "Maggi", multiPrice: [{label: "Plain", price: "100"}, {label: "Masala", price: "150"}], veg: true },
+        { name: "Nachos With Salsa Sauce", price: "200", veg: true },
+        { name: "Veg. Kathi Roll", price: "250", veg: true },
+        { name: "Chicken Sandwich", multiPrice: [{label: "Plain", price: "200"}, {label: "Grilled", price: "250"}], veg: false },
+        { name: "Chicken Club Sandwich", price: "300", veg: false },
+        { name: "Chicken Burger", price: "300", veg: false },
+        { name: "Chicken Pizza ~ Homemade", price: "300", veg: false },
+        { name: "Veg. Mac & Cheese", price: "300", veg: true },
+        { name: "Chicken Mac & Cheese", price: "350", veg: false },
+        { name: "Veg. Pasta", desc: "Arabiatta (Red) / Alfredo (White)", price: "275", veg: true },
+        { name: "Chicken Pasta", desc: "Arabiatta (Red) / Alfredo (White)", price: "350", veg: false }
+      ]
+    },
+    {
+      id: "starters",
+      title: "Starters",
+      timing: "12 PM - 4 PM & 7 PM - 11 PM",
+      items: [
+        { name: "Paneer Tikka / Achari / Malai / Lahsooni", price: "350", veg: true },
+        { name: "Tandoori Mushroom / Bharwan Aloo", price: "300", veg: true },
+        { name: "Hara Bhara Kebab / Veg. Spring Roll / Crispy", price: "250", veg: true },
+        { name: "Dahi Ke Kebab / Veg. Seekh Kebab / Paneer 65", price: "300", veg: true },
+        { name: "Paneer Chili", price: "350", veg: true },
+        { name: "Veg. Manchurian / Schezwan", price: "250", veg: true },
+        { name: "Crispy Corn / Veg. Steamed Momos", price: "200", veg: true },
+        { name: "Honey Chili Potato", price: "250", veg: true },
+        { name: "Tandoori Chicken", multiPrice: [{label: "Half", price: "400"}, {label: "Full", price: "700"}], veg: false },
+        { name: "Chicken Tikka / Achari / Malai / Lahsooni", price: "350", veg: false },
+        { name: "Chicken Tangdi Kebab / Chili Chicken", price: "400", veg: false },
+        { name: "Bhuna Chicken / Manchurian / Schezwan", price: "350", veg: false },
+        { name: "Mutton Boti Kebab", price: "550", veg: false },
+        { name: "Fish Tikka / Rava Fry / Amritsari / Fish & Chips", desc: "(Rawas)", price: "650", veg: false },
+        { name: "Chicken Lollypop", price: "450", veg: false },
+        { name: "Chicken Spring Roll", price: "300", veg: false },
+        { name: "Chicken Steamed Momos", price: "250", veg: false }
+      ]
+    },
+    {
+      id: "indian",
+      title: "Indian Main Course",
+      timing: "12 PM - 3 PM & 7 PM - 11 PM",
+      items: [
+        { name: "Veg. Kadhai / Kolhapuri / Jalfrezi / Miloni / Saoji / Navratan Korma", price: "300", veg: true },
+        { name: "Veg. Kheema Kasturi / Kofta Curry", price: "350", veg: true },
+        { name: "Paneer Butter Masala / Kadhai / Palak / Lababdar / Shahi", price: "350", veg: true },
+        { name: "Paneer Bhurji", multiPrice: [{label: "W/O Curry", price: "325"}, {label: "With Curry", price: "350"}], veg: true },
+        { name: "Mushroom Mutter / Masala / Do Pyaaza", price: "325", veg: true },
+        { name: "Dum Aloo Benarasi", price: "300", veg: true },
+        { name: "Dum Aloo Kashmiri", price: "325", veg: true },
+        { name: "Aloo Jeera / Aloo Gobi Adraki", price: "250", veg: true },
+        { name: "Baingan / Bhindi Masala / Bhindi Do Pyaaza / Lahsooni Methi", price: "275", veg: true },
+        { name: "Methi Mutter Malai", price: "300", veg: true },
+        { name: "Butter Chicken", price: "450", veg: false },
+        { name: "Chicken Handi", multiPrice: [{label: "Half", price: "400"}, {label: "Full", price: "700"}], veg: false },
+        { name: "Chicken Curry", price: "375", veg: false },
+        { name: "Chicken Masala / Kadhai / Saoji / Roganjosh / Kali Mirch", price: "425", veg: false },
+        { name: "Mutton Curry", price: "500", veg: false },
+        { name: "Mutton Saoji / Roganjosh", price: "550", veg: false },
+        { name: "Mutton Handi", multiPrice: [{label: "Half", price: "700"}, {label: "Full", price: "1200"}], veg: false },
+        { name: "Mutton Kheema", price: "700", veg: false },
+        { name: "Fish Curry / Masala", price: "550", veg: false },
+        { name: "Prawn Curry", price: "700", veg: false }
+      ]
+    },
+    {
+      id: "chinese",
+      title: "Chinese Main Course",
+      timing: "12 PM - 3 PM & 7 PM - 11 PM",
+      items: [
+        { name: "Chili Paneer Gravy / Paneer In Schezwan Sauce", price: "300", veg: true },
+        { name: "Paneer In Hot Garlic Sauce", price: "325", veg: true },
+        { name: "Stir - Fried Vegetables / Veg. Manchurian Gravy", price: "275", veg: true },
+        { name: "Chili Chicken / In Schezwan / In Hot Garlic / Manchurian Gravy", price: "350", veg: false },
+        { name: "Fish In Hot Garlic Sauce", price: "600", veg: false }
+      ]
+    },
+    {
+      id: "rice",
+      title: "Rice & Noodles",
+      timing: "12 PM - 3 PM & 7 PM - 11 PM",
+      items: [
+        { name: "Steamed Rice", price: "200", veg: true },
+        { name: "Jeera Rice / Jeera Garlic Rice", price: "225", veg: true },
+        { name: "Curd Rice / Mutter Pulao / Mix Veg. Pulao / Dal Khichdi", price: "250", veg: true },
+        { name: "Kashmiri Pulao / Navratan Pulao", price: "300", veg: true },
+        { name: "Veg. Biryani", price: "275", veg: true },
+        { name: "Chicken Biryani", price: "350", veg: false },
+        { name: "Mutton Biryani", price: "450", veg: false },
+        { name: "Chicken Fried Rice", price: "300", veg: false },
+        { name: "Veg. Fried Rice / Hakka / Schezwan Noodles", price: "250", veg: true },
+        { name: "Chicken Hakka Noodles", price: "275", veg: false }
+      ]
+    },
+    {
+      id: "breads",
+      title: "Dal, Breads & Accompaniments",
+      timing: "11 AM - 11 PM",
+      items: [
+        { name: "Dal Fry", price: "200", veg: true },
+        { name: "Dal Tadka", price: "225", veg: true },
+        { name: "Dal Makhani", price: "275", veg: true },
+        { name: "Tandoori Roti", multiPrice: [{label: "Plain", price: "40"}, {label: "Butter", price: "50"}], veg: true },
+        { name: "Missi Roti / Laccha Paratha", price: "60", veg: true },
+        { name: "Naan", multiPrice: [{label: "Plain", price: "60"}, {label: "Butter/Garlic", price: "80"}], veg: true },
+        { name: "Mix Veg. Kulcha", price: "100", veg: true },
+        { name: "Green / Kachumber Salad", price: "125", veg: true },
+        { name: "Mix Veg / Boondi / Mint Raita", price: "150", veg: true },
+        { name: "Pineapple Raita", price: "175", veg: true },
+        { name: "Papad (Roasted/Fried)", price: "75", veg: true },
+        { name: "Masala Papad / Plain Curd / Salted Peanut", price: "100", veg: true },
+        { name: "Peanut Masala", price: "125", veg: true }
+      ]
+    },
+    {
+      id: "desserts",
+      title: "Desserts",
+      timing: "11 AM - 11 PM",
+      items: [
+        { name: "Choice Of Ice Cream", price: "125", veg: true },
+        { name: "Chocolate Brownie With Ice Cream", price: "175", veg: true },
+        { name: "Hot Gulab Jamun", desc: "2 Pcs", price: "125", veg: true },
+        { name: "Rasgulla", desc: "2 Pcs", price: "125", veg: true },
+        { name: "Kesari Kheer", price: "125", veg: true },
+        { name: "Fruit Custard", price: "225", veg: true },
+        { name: "Fruit Salad With Ice Cream", price: "250", veg: true }
+      ]
+    }
+  ];
+
+  // ==========================================
+  // RENDER LOGIC
+  // ==========================================
+  const menuContainer = document.getElementById("menuContainer");
+
+  // Highlight helper for search
+  function highlight(text, query) {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<span class="hl">$1</span>');
+  }
+
+  function renderMenu(query = "", categoryFilter = "all") {
+    menuContainer.innerHTML = "";
+    let hasResults = false;
+
+    menuData.forEach(section => {
+      // Filter by category
+      if (categoryFilter !== "all" && section.id !== categoryFilter) return;
+
+      // Filter items by search query
+      const filteredItems = section.items.filter(item => {
+        const searchText = (item.name + " " + (item.desc || "")).toLowerCase();
+        return searchText.includes(query.toLowerCase());
+      });
+
+      if (filteredItems.length === 0) return;
+      hasResults = true;
+
+      // Build Section HTML
+      const sectionEl = document.createElement("div");
+      sectionEl.className = "menu-section";
+      sectionEl.innerHTML = `<h2 class="section-title">${section.title} <span>${section.timing}</span></h2>`;
+
+      // Build Item Cards
+      filteredItems.forEach(item => {
+        const itemEl = document.createElement("div");
+        itemEl.className = "item-card";
+        
+        const dietClass = item.veg ? "veg" : "nonveg";
+        const displayName = highlight(item.name, query);
+        const displayDesc = item.desc ? `<p class="item-desc">${highlight(item.desc, query)}</p>` : "";
+        
+        let priceHTML = "";
+        if (item.multiPrice) {
+          priceHTML = `<div class="multi-price-wrap">` + item.multiPrice.map(p => 
+            `<div class="price-pill"><span class="price-pill-label">${p.label}</span><span class="price-pill-amt">₹${p.price}</span></div>`
+          ).join('') + `</div>`;
+        } else {
+          priceHTML = `<span class="item-price">₹${item.price}</span>`;
+        }
+
+        itemEl.innerHTML = `
+          <div class="item-header">
+            <div class="item-title-wrap">
+              <span class="diet-icon ${dietClass}"></span>
+              <h3 class="item-name">${displayName}</h3>
+            </div>
+            ${!item.multiPrice ? priceHTML : ""}
+          </div>
+          ${displayDesc}
+          ${item.multiPrice ? priceHTML : ""}
+        `;
+        sectionEl.appendChild(itemEl);
+      });
+
+      menuContainer.appendChild(sectionEl);
+    });
+
+    document.getElementById("noResults").style.display = hasResults ? "none" : "block";
+  }
+
+  // ==========================================
+  // EVENT LISTENERS
+  // ==========================================
+  const searchInput = document.getElementById("searchInput");
+  const filterBtns = document.querySelectorAll(".filter-btn");
+
+  let currentCategory = "all";
+
+  // Search Event
+  searchInput.addEventListener("input", (e) => {
+    renderMenu(e.target.value, currentCategory);
+  });
+
+  // Category Filter Event
+  filterBtns.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      // Update Active State
+      filterBtns.forEach(b => b.classList.remove("active"));
+      e.target.classList.add("active");
+      
+      currentCategory = e.target.getAttribute("data-cat");
+      
+      // Clear search when switching categories
+      searchInput.value = ""; 
+      
+      renderMenu("", currentCategory);
+      
+      // Scroll to top of menu smoothly
+      window.scrollTo({
+        top: document.querySelector('.nav-wrapper').offsetTop,
+        behavior: 'smooth'
+      });
+    });
+  });
+
+  // Initial Render
+  renderMenu();
+
+</script>
+
+</body>
+</html>
